@@ -19,6 +19,44 @@ def stop_thread():
 
 
 
+def on_drop(event):
+    # Check if files are being dropped
+    if event.data:
+        # Extract the filename from the dropped files
+        file_path = event.data
+
+        try:
+            # Read the content of the dropped file
+            with open(file_path, 'r') as file:
+                content = file.read()
+
+            # Insert the content into the text input
+            text_input.delete(0, tk.END)
+            text_input.insert(tk.END, content)
+
+        except Exception as e:
+            # Handle errors
+            print(f"Error: {e}")
+
+def on_drop(event):
+    # Check if files are being dropped
+    if event.data:
+        # Extract the filename from the dropped files
+        file_path = event.data
+
+        try:
+            # Read the content of the dropped file
+            with open(file_path, 'r') as file:
+                content = file.read()
+
+            # Insert the content into the text input
+            text_input.delete(0, tk.END)
+            text_input.insert(tk.END, content)
+
+        except Exception as e:
+            # Handle errors
+            print(f"Error: {e}")
+
 def main():
     # Create the main window
     root = tk.Tk()
@@ -44,7 +82,7 @@ def main():
     paste_label.grid(row=0, column=0, columnspan=2, pady=(10, 5), sticky="ew")
 
     # Create and position the text input
-    text_input = tk.Entry(root, font=("Helvetica", 256), width=20)  # Increase font size here
+    text_input = tk.Entry(root, font=("Helvetica", 36), width=20)  # Increase font size here
     text_input.grid(row=1, column=0, columnspan=2, pady=(0, 5), padx=10, sticky="ew")
 
     # Create and position the "Start in 3 seconds" button
@@ -58,9 +96,11 @@ def main():
     # Initialize thread variable
     thread = None
 
+    # Bind drop event to the root window
+    root.bind("<<Drop>>", on_drop)
+
     # Start the GUI event loop
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()
