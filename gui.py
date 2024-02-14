@@ -1,106 +1,78 @@
 import tkinter as tk
-import threading
+from tkinter import scrolledtext
+import multiprocessing
 import time
+import sys
 
-def start_in_3_seconds():
-    time.sleep(3)
-    print("Starting...")
-
-def start_thread():
-    global thread
-    thread = threading.Thread(target=start_in_3_seconds)
-    thread.start()
-
-def stop_thread():
-    global thread
-    if thread is not None and thread.is_alive():
-        thread.join()
-        print("Stopped.")
+def typing(interval, data, typing_function):
+    delay = int(3)
+    time.sleep(delay)
+    typing_function(data, interval)
 
 
+def start_typing(typing_function):
+    global t1
+    t1 = multiprocessing.Process(target=typing,
+                                 args=(ent_interval.get(), txt_box.get("1.0", tk.END)[:-1], typing_function))
+    t1.start()
 
-def on_drop(event):
-    # Check if files are being dropped
-    if event.data:
-        # Extract the filename from the dropped files
-        file_path = event.data
 
-        try:
-            # Read the content of the dropped file
-            with open(file_path, 'r') as file:
-                content = file.read()
+def stop_typing():
+    t1.terminate()
+    t1.join()
+    sys.stdout.flush()
 
-            # Insert the content into the text input
-            text_input.delete(0, tk.END)
-            text_input.insert(tk.END, content)
 
-        except Exception as e:
-            # Handle errors
-            print(f"Error: {e}")
+def select_all(event):
+    txt_box.tag_add(tk.SEL, "1.0", tk.END)
+    txt_box.mark_set(tk.INSERT, "1.0")
+    txt_box.see(tk.INSERT)
+    return 'break'
 
-def on_drop(event):
-    # Check if files are being dropped
-    if event.data:
-        # Extract the filename from the dropped files
-        file_path = event.data
 
-        try:
-            # Read the content of the dropped file
-            with open(file_path, 'r') as file:
-                content = file.read()
+def run(typing_function):
+    global window, frm_params, ent_interval, txt_box, frm_buttons
 
-            # Insert the content into the text input
-            text_input.delete(0, tk.END)
-            text_input.insert(tk.END, content)
+    window = tk.Tk()
+    window.title("Auto Typer")
 
-        except Exception as e:
-            # Handle errors
-            print(f"Error: {e}")
+    # Params Frame
+    frm_params = tk.Frame()
+    frm_params.grid(row=0, column=0)
 
-def main():
-    # Create the main window
-    root = tk.Tk()
-    root.title("Text Input and Buttons")
 
-    # Calculate the screen width and height
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
+    # Interval
+    lbl_interval = tk.Label(text="Waiting time between characters (In Sec)", master=frm_params)
+    lbl_interval.grid(row=0, column=1, padx=50, pady=5)
 
-    # Calculate the window width and height to occupy 20% of the screen
-    window_width = int(screen_width * 0.2)
-    window_height = int(screen_height * 0.4)
+    ent_interval = tk.Entry(justify='center', master=frm_params)
+    ent_interval.insert(0, "0.00")
+    ent_interval.grid(row=1, column=1, padx=50)
 
-    # Set the window dimensions and position it in the center of the screen
-    root.geometry(f"{window_width}x{window_height}+{int((screen_width - window_width) / 2)}+{int((screen_height - window_height) / 2)}")
+    # Data
+    lbl_data = tk.Label(text="Paste Text Here", font='Helvetica 18 bold')
+    lbl_data.grid(row=3, column=0, pady=(10, 2))
 
-    # Configure rows and columns to resize proportionally
-    root.grid_rowconfigure(1, weight=1)
-    root.grid_columnconfigure(0, weight=1)
+    txt_box = scrolledtext.ScrolledText(window, undo=True)
+    txt_box.grid(row=4, column=0)
 
-    # Create and position the "Paste text here" label
-    paste_label = tk.Label(root, text="Paste text here", font=("Helvetica", 16))
-    paste_label.grid(row=0, column=0, columnspan=2, pady=(10, 5), sticky="ew")
+    txt_box.bind("<Control-Key-a>", select_all)
+    txt_box.bind("<Control-Key-A>", select_all)
 
-    # Create and position the text input
-    text_input = tk.Entry(root, font=("Helvetica", 36), width=20)  # Increase font size here
-    text_input.grid(row=1, column=0, columnspan=2, pady=(0, 5), padx=10, sticky="ew")
+    # Buttons Frame
+    frm_buttons = tk.Frame()
+    frm_buttons.grid(row=5, column=0)
 
-    # Create and position the "Start in 3 seconds" button
-    start_button = tk.Button(root, text="Start in 3 seconds", command=start_thread, font=("Helvetica", 16))
-    start_button.grid(row=2, column=0, pady=5, padx=10, sticky="ew")
+    # Start
+    start = tk.Button(text="Start (in 3 seconds)", master=frm_buttons, command=lambda: start_typing(typing_function))
+    start.grid(row=0, column=0, padx=10, pady=10)
 
-    # Create and position the "Stop" button
-    stop_button = tk.Button(root, text="Stop", command=stop_thread, font=("Helvetica", 16))
-    stop_button.grid(row=2, column=1, pady=5, padx=10, sticky="ew")
+    # Stop
+    stop = tk.Button(text="Stop", master=frm_buttons, command=stop_typing)
+    stop.grid(row=0, column=1, padx=10, pady=10)
 
-    # Initialize thread variable
-    thread = None
+    # Exit
+    exit_button = tk.Button(text="Exit", master=frm_buttons, command=window.destroy)
+    exit_button.grid(row=0, column=2, padx=10, pady=10)
 
-    # Bind drop event to the root window
-    root.bind("<<Drop>>", on_drop)
-
-    # Start the GUI event loop
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()
+    window.mainloop()

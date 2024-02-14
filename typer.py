@@ -1,5 +1,6 @@
 import time
 import os_Interfaces.universal_interface as os_interface
+import gui
 
 KEY_NAMES = [
     "\t",
@@ -198,10 +199,9 @@ KEY_NAMES = [
     "optionright",
 ]
 KEYBOARD_MAPPING = {key: key for key in KEY_NAMES}
-universal_interface = None
 
 
-def press(keys, presses=1, interval=0.0):
+def press(universal_interface, keys, presses=1, interval=0.0):
     """
     Performs a keyboard key press down, followed by a release.
     @param keys: The key to be pressed. The valid names are listed in KEYBOARD_KEYS. Can also be a list of such strings.
@@ -228,7 +228,7 @@ def press(keys, presses=1, interval=0.0):
         time.sleep(float(interval))
 
 
-def startTyping(message, interval=0.0):
+def startTyping(universal_interface, message, interval=0.0):
     """
     Type the message by sending keyboard key presses.
     @param message: The string to be typed.
@@ -238,12 +238,15 @@ def startTyping(message, interval=0.0):
     for c in message:
         if len(c) > 1:
             c = c.lower()
-        press(c)
-        time.sleep(interval)
+        press(universal_interface, c)
+        time.sleep(float(interval))
+
+
+def main(data, interval):
+    universal_interface = os_interface.UniversalInterface()
+    universal_interface.update_keyboard_mapping(KEYBOARD_MAPPING)
+    startTyping(universal_interface, data, interval)
 
 
 if __name__ == "__main__":
-    my_str = 'abc'
-    universal_interface = os_interface.UniversalInterface()
-    universal_interface.update_keyboard_mapping(KEYBOARD_MAPPING)
-    startTyping(my_str)
+    gui.run(main)
