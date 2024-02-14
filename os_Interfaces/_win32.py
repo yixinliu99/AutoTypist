@@ -4,7 +4,7 @@
 
 import ctypes
 import ctypes.wintypes
-from universal_interface import UniversalInterface, isShiftCharacter
+from os_Interfaces.universal_interface import UniversalInterface, isShiftCharacter
 
 KEYEVENTF_KEYDOWN = 0x0000  # Technically this constant doesn't exist in the MS documentation. It's the lack of KEYEVENTF_KEYUP that means pressing the key down.
 KEYEVENTF_KEYUP = 0x0002
@@ -138,7 +138,7 @@ class Win32Interface(UniversalInterface):
         for ch in range(32, 128):  # printable ASCII characters
             keyboard_mapping[chr(ch)] = ctypes.windll.user32.VkKeyScanA(ctypes.wintypes.WCHAR(chr(ch)))
 
-    def perform_key_action(self, keyboard_mapping: dict, key, up=True):
+    def perform_key_action(self, key, keyboard_mapping: dict, up=True):
         if key not in keyboard_mapping or keyboard_mapping[key] is None:
             return
         if up:
