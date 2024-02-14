@@ -34,7 +34,7 @@ def run():
 
     # Exit
     exit_button = tk.Button(text="Exit", master=frm_buttons, command=window.destroy)
-    exit_button.grid(row=0, column=2, padx=10, pady=10)
+    exit_button.grid(row=1, column=0, padx=10, pady=10)
 
     # Text Box
     txt_box = scrolledtext.ScrolledText(window, undo=True)
@@ -51,7 +51,7 @@ def run():
 
     ent_interval = tk.Entry(justify='center', master=frm_params)
     ent_interval.insert(0, "0.00")
-    ent_interval.grid(row=1, column=1, padx=50)
+    ent_interval.grid(row=2, column=1, padx=50)
 
     window.mainloop()
 
