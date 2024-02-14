@@ -1,6 +1,5 @@
 import time
 import os_Interfaces.universal_interface as os_interface
-import gui
 
 KEY_NAMES = [
     "\t",
@@ -201,52 +200,51 @@ KEY_NAMES = [
 KEYBOARD_MAPPING = {key: key for key in KEY_NAMES}
 
 
-def press(universal_interface, keys, presses=1, interval=0.0):
-    """
-    Performs a keyboard key press down, followed by a release.
-    @param keys: The key to be pressed. The valid names are listed in KEYBOARD_KEYS. Can also be a list of such strings.
-    @param presses: The number of press repetitions. 1 by default, for just one press.
-    @param interval: How many seconds between each press. 0.0 by default, for no pause between presses.
-    @return: None
-    """
-    if type(keys) == str:
-        if len(keys) > 1:
-            keys = keys.lower()
-        keys = [keys]  # If keys is 'enter', convert it to ['enter'].
-    else:
-        lower_keys = []
-        for s in keys:
-            if len(s) > 1:
-                lower_keys.append(s.lower())
-            else:
-                lower_keys.append(s)
-        keys = lower_keys
-    for i in range(presses):
-        for k in keys:
-            universal_interface.perform_key_action(k, KEYBOARD_MAPPING, False)
-            universal_interface.perform_key_action(k, KEYBOARD_MAPPING, True)
-        time.sleep(float(interval))
+class Typist:
+    def __init__(self, data, interval):
+        self.data = data
+        self.interval = interval
+        self.universal_interface = os_interface.UniversalInterface()
 
+    def press(self, keys, presses=1, interval=0.0):
+        """
+        Performs a keyboard key press down, followed by a release.
+        @param keys: The key to be pressed. The valid names are listed in KEYBOARD_KEYS. Can also be a list of such strings.
+        @param presses: The number of press repetitions. 1 by default, for just one press.
+        @param interval: How many seconds between each press. 0.0 by default, for no pause between presses.
+        @return: None
+        """
+        if type(keys) == str:
+            if len(keys) > 1:
+                keys = keys.lower()
+            keys = [keys]  # If keys is 'enter', convert it to ['enter'].
+        else:
+            lower_keys = []
+            for s in keys:
+                if len(s) > 1:
+                    lower_keys.append(s.lower())
+                else:
+                    lower_keys.append(s)
+            keys = lower_keys
+        for i in range(presses):
+            for k in keys:
+                self.universal_interface.perform_key_action(k, KEYBOARD_MAPPING, False)
+                self.universal_interface.perform_key_action(k, KEYBOARD_MAPPING, True)
+            time.sleep(float(interval))
 
-def startTyping(universal_interface, message, interval=0.0):
-    """
-    Type the message by sending keyboard key presses.
-    @param message: The string to be typed.
-    @param interval: How many seconds to wait in between each key press.
-    @return: None
-    """
-    for c in message:
-        if len(c) > 1:
-            c = c.lower()
-        press(universal_interface, c)
-        time.sleep(float(interval))
+    def startTyping(self, message, interval=0.0):
+        """
+        Type the message by sending keyboard key presses.
+        @param message: The string to be typed.
+        @param interval: How many seconds to wait in between each key press.
+        @return: None
+        """
+        for c in message:
+            if len(c) > 1:
+                c = c.lower()
+            self.press(c)
+            time.sleep(float(interval))
 
-
-def main(data, interval):
-    universal_interface = os_interface.UniversalInterface()
-    universal_interface.update_keyboard_mapping(KEYBOARD_MAPPING)
-    startTyping(universal_interface, data, interval)
-
-
-if __name__ == "__main__":
-    gui.run(main)
+    def main(self, data, interval):
+        self.universal_interface.update_keyboard_mapping(KEYBOARD_MAPPING)
+        self.startTyping(data, interval)
