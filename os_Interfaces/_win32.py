@@ -6,7 +6,6 @@ import ctypes
 import ctypes.wintypes
 from os_Interfaces.universal_interface import UniversalInterface, isShiftCharacter
 
-KEYEVENTF_KEYDOWN = 0x0000  # Technically this constant doesn't exist in the MS documentation. It's the lack of KEYEVENTF_KEYUP that means pressing the key down.
 KEYEVENTF_KEYUP = 0x0002
 
 
@@ -153,17 +152,10 @@ class Win32Interface(UniversalInterface):
         for apply_mod, vk_mod in [(mods & 4, 0x12), (mods & 2, 0x11),
                                   (mods & 1 or needs_shift, 0x10)]:
             if apply_mod:
-                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYDOWN, 0)  #
+                ctypes.windll.user32.keybd_event(vk_mod, 0, 0, 0)  #
 
         ctypes.windll.user32.keybd_event(vk_code, 0, dw_flag, 0)
         for apply_mod, vk_mod in [(mods & 1 or needs_shift, 0x10), (mods & 2, 0x11),
                                   (mods & 4, 0x12)]:
             if apply_mod:
                 ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
-
-
-# # Fixes the scaling issues where PyAutoGUI was reporting the wrong resolution:
-# try:
-#     ctypes.windll.user32.SetProcessDPIAware()
-# except AttributeError:
-#     pass  # Windows XP doesn't support this, so just do nothing.

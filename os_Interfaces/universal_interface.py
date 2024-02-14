@@ -2,7 +2,6 @@ import sys
 import abc
 
 
-
 class UniversalInterface(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
