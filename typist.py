@@ -201,9 +201,7 @@ KEYBOARD_MAPPING = {key: key for key in KEY_NAMES}
 
 
 class Typist:
-    def __init__(self, data, interval):
-        self.data = data
-        self.interval = interval
+    def __init__(self):
         self.universal_interface = os_interface.UniversalInterface()
 
     def press(self, keys, presses=1, interval=0.0):
@@ -245,6 +243,17 @@ class Typist:
             self.press(c)
             time.sleep(float(interval))
 
-    def main(self, data, interval):
+    def run(self, text, interval):
         self.universal_interface.update_keyboard_mapping(KEYBOARD_MAPPING)
-        self.startTyping(data, interval)
+        self.startTyping(text, interval)
+
+    def run_from_file(self, file_path, interval):
+        self.universal_interface.update_keyboard_mapping(KEYBOARD_MAPPING)
+        with open(file_path, 'r', encoding='UTF-8') as file:
+            while True:
+                line = file.readline()
+                if not line:
+                    break
+                self.startTyping(line, interval)
+                time.sleep(float(interval))
+

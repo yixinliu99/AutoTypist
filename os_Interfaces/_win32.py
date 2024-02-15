@@ -14,6 +14,7 @@ class Win32Interface(UniversalInterface):
         keyboard_mapping.update({
             'backspace': 0x08,  # VK_BACK
             '\b': 0x08,  # VK_BACK
+            '\r': 0x0d,  # VK_RETURN
             'super': 0x5B,  # VK_LWIN
             'tab': 0x09,  # VK_TAB
             '\t': 0x09,  # VK_TAB
