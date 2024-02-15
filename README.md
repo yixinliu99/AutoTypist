@@ -11,12 +11,12 @@ Auto Typist is a solution to this problem. It converts texts to keypresses just 
 3. Move your cursor to the place you want to type.
 4. Wait for 3 seconds and the program will start typing.
 
-### Dependencies
-Only python 3 is required, no third-party libraries are used.
-
 ### Releases
-1. https://github.com/yixinliu99/AutoTypist/releases/tag/v1.0.0
-2. Download or clone the repo, and run `python gui.py` to start the program.
+1. Standalone executable (maybe detected as malware by Windows Defender, I'm trying to fix this): https://github.com/yixinliu99/AutoTypist/releases/tag/v1.0.0
+2. Clone the repo, and run `python gui.py` to start the program.
+
+### Dependencies
+Just python3, no third-party library is used.
 
 ### Credits
 https://github.com/asweigart/pyautogui
