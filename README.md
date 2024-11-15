@@ -4,6 +4,7 @@ Perform keystrokes based on given text. Currently supports Windows and Linux (Wa
 ### How to use
 ![showcase.gif](static%2Fshowcase.gif)
 
+0. Clone the repo, create python virtual environment, install dependencies and run `python gui.py`.
 1. Copy what you want to type to the program.
 2. Click start.
 3. Move your cursor to the place you want to type.
