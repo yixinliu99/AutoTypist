@@ -1,5 +1,5 @@
 ### Auto Typist
-Perform keystrokes based on given text
+Perform keystrokes based on given text. Currently supports Windows and Linux (Wayland)
 
 ### How to use
 ![showcase.gif](static%2Fshowcase.gif)
