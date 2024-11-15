@@ -32,7 +32,9 @@ def isShiftCharacter(character):
 
 if sys.platform == "win32":
     from os_Interfaces._win32 import Win32Interface as UniversalInterface
-# elif sys.platform == 'x11':
-#     from _linux import LinuxInterface as UniversalInterface
+elif sys.platform == 'linux':
+    from os_Interfaces._linux import LinuxInterface as UniversalInterface
+    from evdev import UInput
+    UniversalInterface.ui = UInput()
 else:
     raise NotImplementedError("Unsupported operating system")
