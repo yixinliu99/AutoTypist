@@ -107,55 +107,33 @@ class LinuxInterface(UniversalInterface, ABC):
             'f10': e.KEY_F10,
             'f11': e.KEY_F11,
             'f12': e.KEY_F12,
-            'numlock': e.KEY_NUMLOCK,
-            'scrolllock': e.KEY_SCROLLLOCK,
-            'lshift': e.KEY_LEFTSHIFT,
-            'rshift': e.KEY_RIGHTSHIFT,
-            'lctrl': e.KEY_LEFTCTRL,
-            'rctrl': e.KEY_RIGHTCTRL,
-            'lalt': e.KEY_LEFTALT,
-            'ralt': e.KEY_RIGHTALT,
-            'lmeta': e.KEY_LEFTMETA,
-            'rmeta': e.KEY_RIGHTMETA,
-            'lwin': e.KEY_LEFTMETA,
-            'rwin': e.KEY_RIGHTMETA,
-            'compose': e.KEY_COMPOSE,
-            'power': e.KEY_POWER,
-            'wake': e.KEY_WAKEUP,
-            'menu': e.KEY_MENU,
-            'help': e.KEY_HELP,
-            'direction': e.KEY_DIRECTION,
-            'again': e.KEY_AGAIN,
-            'undo': e.KEY_UNDO,
-            'cut': e.KEY_CUT,
-            'copy': e.KEY_COPY,
-            'paste': e.KEY_PASTE,
-            'find': e.KEY_FIND,
-            'mute': e.KEY_MUTE,
-            'volup': e.KEY_VOLUMEUP,
-            'voldown': e.KEY_VOLUMEDOWN,
-            'next': e.KEY_NEXTSONG,
-            'prev': e.KEY_PREVIOUSSONG,
-            'play': e.KEY_PLAYPAUSE,
-            'eject': e.KEY_EJECTCD,
-            'mail': e.KEY_MAIL,
-            'calc': e.KEY_CALC,
-            'mycomp': e.KEY_COMPUTER,
-            'search': e.KEY_SEARCH,
-            'back': e.KEY_BACK,
-            'forward': e.KEY_FORWARD,
-            'stop': e.KEY_STOP,
-            'refresh': e.KEY_REFRESH,
-            'bookmarks': e.KEY_BOOKMARKS,
-            'open': e.KEY_OPEN,
-            'close': e.KEY_CLOSE,
-            'exit': e.KEY_EXIT,
-            'move': e.KEY_MOVE,
-            'edit': e.KEY_EDIT,
-        })
+            '!': e.KEY_1,
+            '@': e.KEY_2,
+            '#': e.KEY_3,
+            '$': e.KEY_4,
+            '%': e.KEY_5,
+            '^': e.KEY_6,
+            '&': e.KEY_7,
+            '*': e.KEY_8,
+            '(': e.KEY_9,
+            ')': e.KEY_0,
+            '_': e.KEY_MINUS,
+            '+': e.KEY_EQUAL,
+            '{': e.KEY_LEFTBRACE,
+            '}': e.KEY_RIGHTBRACE,
+            '|': e.KEY_BACKSLASH,
+            ':': e.KEY_SEMICOLON,
+            '"': e.KEY_APOSTROPHE,
+            '<': e.KEY_COMMA,
+            '>': e.KEY_DOT,
+            '?': e.KEY_SLASH,
+            '~': e.KEY_GRAVE,
+
+       })
 
 
     def perform_key_action(self, key, keyboard_mapping: dict, up=True):
+        key = str(key)
         needs_shift = isShiftCharacter(key)
         if needs_shift:
             key = key.lower()
@@ -169,3 +147,9 @@ class LinuxInterface(UniversalInterface, ABC):
         else:
             self.ui.write(e.EV_KEY, keyboard_mapping[key], 1)
         self.ui.syn()
+
+        # release shift
+        if needs_shift:
+            self.ui.write(e.EV_KEY, e.KEY_LEFTSHIFT, 0)
+            self.ui.syn()
+        
